@@ -1,0 +1,414 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ArrowRight, Clock, Truck, Star, ChefHat, Sparkles } from "lucide-react";
+
+export default function Home() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    console.log("Canteen Express Home Page Loaded ✅");
+  }, []);
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-orange-50">
+      {/* Navigation Bar */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#ff4b2b]/95 shadow-lg">
+        <nav className="container mx-auto px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-3xl">🍴</span>
+            <span className="text-white text-2xl font-bold">Madras Engineering College Canteen</span>
+          </div>
+          <ul className="flex flex-wrap items-center justify-center gap-6 md:gap-8 list-none">
+            <li>
+              <Link
+                href="/"
+                className="text-[#ffeb3b] no-underline font-semibold transition-all hover:text-[#ffeb3b] hover:scale-105"
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/menu"
+                className="text-white no-underline font-medium transition-all hover:text-[#ffeb3b] hover:scale-105"
+              >
+                Menu
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/login"
+                className="text-white no-underline font-medium transition-all hover:text-[#ffeb3b] hover:scale-105"
+              >
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/signup"
+                className="bg-[#ffeb3b] text-black px-5 py-2 rounded-full font-semibold transition-all hover:bg-white hover:shadow-lg hover:scale-105"
+              >
+                Sign Up
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/contact"
+                className="text-white no-underline font-medium transition-all hover:text-[#ffeb3b] hover:scale-105"
+              >
+                Contact
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <section
+        className="relative h-[85vh] md:h-[90vh] flex justify-center items-center text-center text-white overflow-hidden"
+      >
+        {/* Beautiful Food Image Grid Background */}
+        <div className="absolute inset-0 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/delicious-golden-crispy-masala-dosa-on-a-a428c463-20251108104159.jpg')",
+            }}
+          />
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in delay-100"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/fluffy-white-idli-steamed-rice-cakes-arr-e77e0381-20251108104155.jpg')",
+            }}
+          />
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in delay-200"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/traditional-south-indian-idiyappam-strin-503b506f-20251108104155.jpg')",
+            }}
+          />
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in delay-300"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/aromatic-chicken-biryani-in-a-traditiona-1bbf12bd-20251108104154.jpg')",
+            }}
+          />
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in delay-400"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/crispy-fried-chicken-65-pieces-garnished-e6daefb7-20251108104155.jpg')",
+            }}
+          />
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in delay-500"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/traditional-south-indian-pongal-in-a-bra-e323507e-20251108104348.jpg')",
+            }}
+          />
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in delay-150"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/golden-brown-crispy-poori-indian-fried-b-74ef3cf0-20251108104346.jpg')",
+            }}
+          />
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in delay-250"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/soft-fluffy-chapathi-indian-flatbread-st-6faef159-20251108104347.jpg')",
+            }}
+          />
+          <div 
+            className="relative h-full bg-cover bg-center animate-fade-in delay-350"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/layered-crispy-kerala-parota-paratha-on--2d4fd2e9-20251108104347.jpg')",
+            }}
+          />
+          {/* Repeat for additional columns on larger screens */}
+          <div 
+            className="hidden md:block relative h-full bg-cover bg-center animate-fade-in delay-450"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/delicious-golden-crispy-masala-dosa-on-a-a428c463-20251108104159.jpg')",
+            }}
+          />
+          <div 
+            className="hidden lg:block relative h-full bg-cover bg-center animate-fade-in delay-100"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/aromatic-chicken-biryani-in-a-traditiona-1bbf12bd-20251108104154.jpg')",
+            }}
+          />
+          <div 
+            className="hidden lg:block relative h-full bg-cover bg-center animate-fade-in delay-200"
+            style={{
+              backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/traditional-south-indian-pongal-in-a-bra-e323507e-20251108104348.jpg')",
+            }}
+          />
+        </div>
+        
+        {/* Enhanced Dark Overlay for Text Readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-[#ff4b2b]/40 to-black/75"></div>
+        
+        <div
+          className={`relative z-10 max-w-4xl px-6 transition-all duration-1000 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
+        >
+          <div className="inline-flex items-center gap-2 bg-[#ffeb3b]/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-[#ffeb3b]/30">
+            <Sparkles className="w-4 h-4 text-[#ffeb3b]" />
+            <span className="text-[#ffeb3b] text-sm font-medium">Fast Delivery • Fresh Food</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            Welcome to{" "}
+            <span className="text-[#ffeb3b] inline-block animate-pulse">Madras Engineering College Canteen</span>
+          </h1>
+          <p className="text-xl md:text-2xl mb-8 text-gray-100 max-w-2xl mx-auto">
+            Delicious meals, lightning-fast delivery — straight from your favorite canteen to your doorstep!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/menu"
+              className="group inline-flex items-center gap-2 bg-[#ffeb3b] text-black px-8 py-4 rounded-full no-underline font-bold text-lg transition-all hover:bg-white hover:shadow-2xl hover:scale-105"
+            >
+              🍔 Browse Menu
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full no-underline font-semibold text-lg border-2 border-white/30 transition-all hover:bg-white/20 hover:border-white/50"
+            >
+              Get Started Free
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+              Why Choose <span className="text-[#ff4b2b]">Madras Engineering College Canteen</span>?
+            </h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              Experience the perfect blend of speed, quality, and convenience
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="group bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-orange-100">
+              <div className="w-16 h-16 bg-[#ff4b2b] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Clock className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Lightning Fast</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Get your favorite meals delivered in under 30 minutes. Hot, fresh, and on time, every time.
+              </p>
+            </div>
+
+            <div className="group bg-gradient-to-br from-yellow-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-yellow-100">
+              <div className="w-16 h-16 bg-[#ffeb3b] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <ChefHat className="w-8 h-8 text-black" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Quality Food</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Prepared by expert chefs using fresh ingredients. Taste the difference in every bite.
+              </p>
+            </div>
+
+            <div className="group bg-gradient-to-br from-red-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-red-100">
+              <div className="w-16 h-16 bg-[#ff4b2b] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Truck className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Free Delivery</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Enjoy free delivery on all orders above ₹200. More savings, more deliciousness!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Dishes Preview */}
+      <section className="py-20 bg-gradient-to-b from-orange-50 to-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+              Customer <span className="text-[#ff4b2b]">Favorites</span>
+            </h2>
+            <p className="text-gray-600 text-lg">Our most loved dishes that keep them coming back</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { name: "Chicken Biryani", price: "₹120", emoji: "🍛", rating: 4.8 },
+              { name: "Paneer Butter Masala", price: "₹100", emoji: "🍲", rating: 4.7 },
+              { name: "Masala Dosa", price: "₹60", emoji: "🥞", rating: 4.9 },
+              { name: "Cold Coffee", price: "₹50", emoji: "☕", rating: 4.6 },
+            ].map((dish, index) => (
+              <div
+                key={index}
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-[#ff4b2b] to-[#ff6b4b] h-48 flex items-center justify-center text-8xl group-hover:scale-110 transition-transform">
+                  {dish.emoji}
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center gap-1 mb-2">
+                    <Star className="w-4 h-4 fill-[#ffeb3b] text-[#ffeb3b]" />
+                    <span className="text-sm font-semibold text-gray-700">{dish.rating}</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">{dish.name}</h3>
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-bold text-[#ff4b2b]">{dish.price}</span>
+                    <button className="bg-[#ffeb3b] text-black px-4 py-2 rounded-full font-semibold text-sm hover:bg-[#ff4b2b] hover:text-white transition-colors">
+                      Order Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/menu"
+              className="inline-flex items-center gap-2 bg-[#ff4b2b] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#ff6b4b] transition-all hover:shadow-xl hover:scale-105"
+            >
+              View Full Menu
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+              What Our <span className="text-[#ff4b2b]">Customers Say</span>
+            </h2>
+            <p className="text-gray-600 text-lg">Real reviews from real food lovers</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Priya Sharma",
+                review: "Best food delivery service! Always on time and the food is absolutely delicious. Highly recommended!",
+                rating: 5,
+              },
+              {
+                name: "Rahul Verma",
+                review: "The biryani here is to die for! Quick delivery and amazing taste. My go-to place for lunch.",
+                rating: 5,
+              },
+              {
+                name: "Anita Desai",
+                review: "Love the variety and quality. The staff is friendly and the app is so easy to use. 5 stars!",
+                rating: 5,
+              },
+            ].map((testimonial, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-orange-100"
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-[#ffeb3b] text-[#ffeb3b]" />
+                  ))}
+                </div>
+                <p className="text-gray-700 italic mb-6 leading-relaxed">"{testimonial.review}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#ff4b2b] to-[#ff6b4b] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    {testimonial.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-800">{testimonial.name}</p>
+                    <p className="text-sm text-gray-500">Verified Customer</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-[#ff4b2b] to-[#ff6b4b] text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Ready to Order Your Favorite Meal?
+          </h2>
+          <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
+            Join thousands of happy customers enjoying delicious food delivered fast!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/menu"
+              className="inline-flex items-center gap-2 bg-white text-[#ff4b2b] px-8 py-4 rounded-full font-bold text-lg hover:bg-[#ffeb3b] hover:text-black transition-all hover:shadow-2xl hover:scale-105"
+            >
+              Order Now
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 bg-transparent text-white px-8 py-4 rounded-full font-bold text-lg border-2 border-white hover:bg-white hover:text-[#ff4b2b] transition-all"
+            >
+              Create Account
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-3xl">🍴</span>
+                <span className="text-2xl font-bold">Madras Engineering College Canteen</span>
+              </div>
+              <p className="text-gray-400">
+                Delicious food delivered fast, right to your doorstep.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-bold text-lg mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li><Link href="/" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">Home</Link></li>
+                <li><Link href="/menu" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">Menu</Link></li>
+                <li><Link href="/contact" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-4">Account</h3>
+              <ul className="space-y-2">
+                <li><Link href="/login" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">Login</Link></li>
+                <li><Link href="/signup" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">Sign Up</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-4">Contact Info</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>📞 +91 98765 43210</li>
+                <li>📧 info@canteenexpress.com</li>
+                <li>📍 Mumbai, India</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
+            <p>© 2025 Madras Engineering College Canteen. All Rights Reserved. Made with ❤️ for food lovers.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
