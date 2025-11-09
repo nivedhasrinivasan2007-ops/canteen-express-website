@@ -161,6 +161,16 @@ export default function Home() {
                 Contact
               </Link>
             </li>
+            {session?.user && (
+              <li>
+                <Link
+                  href="/admin/orders"
+                  className="text-white no-underline font-medium transition-all hover:text-[#ffeb3b] hover:scale-105"
+                >
+                  Admin
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </header>

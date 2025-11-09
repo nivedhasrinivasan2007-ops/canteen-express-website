@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Package, Clock, CheckCircle, XCircle, MapPin, Bell, ChefHat, Truck } from "lucide-react";
+import { ArrowLeft, Package, Clock, CheckCircle, XCircle, MapPin, Bell, ChefHat, Truck, User } from "lucide-react";
 import { toast } from "sonner";
 
 interface OrderItem {
@@ -182,6 +182,13 @@ export default function OrdersPage() {
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Back to Home</span>
+            </Link>
+            <Link
+              href="/admin/orders"
+              className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
+            >
+              <User className="w-5 h-5" />
+              <span>Admin Panel</span>
             </Link>
           </div>
           <div className="flex items-center justify-between">

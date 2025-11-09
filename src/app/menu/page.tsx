@@ -348,6 +348,13 @@ export default function MenuPage() {
                     <User className="w-4 h-4" />
                     <span className="font-medium hidden sm:inline">{session.user.name || session.user.email}</span>
                   </div>
+                  <Link
+                    href="/admin/orders"
+                    className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition-all"
+                  >
+                    <User className="w-4 h-4" />
+                    <span className="hidden sm:inline">Admin</span>
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition-all"
