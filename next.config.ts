@@ -16,7 +16,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  outputFileTracingRoot: path.resolve(__dirname, '../../'),
+  // outputFileTracingRoot removed — pointing outside the project root caused
+  // duplicated/incorrect paths on Vercel builds (e.g. /vercel/path0/vercel/path0/...)
+  // If you need this in a monorepo, set it to the monorepo root explicitly.
   typescript: {
     ignoreBuildErrors: true,
   },
