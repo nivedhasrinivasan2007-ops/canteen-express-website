@@ -76,7 +76,7 @@ export default function SignupPage() {
           <div className="text-center mb-8">
             <div className="text-6xl mb-4">🍴</div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Join Us Today!</h1>
-            <p className="text-gray-600">Create your Canteen Express account</p>
+            <p className="text-gray-600">Create your Madras Engineering College Canteen account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
