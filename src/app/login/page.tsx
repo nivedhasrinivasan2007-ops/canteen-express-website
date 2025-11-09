@@ -3,18 +3,43 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempt:", formData);
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email: formData.email,
+        password: formData.password,
+        rememberMe: formData.rememberMe,
+      });
+
+      if (error?.code) {
+        toast.error("Invalid email or password. Please make sure you have already registered an account and try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      toast.success("Login successful! Redirecting...");
+      router.push("/menu");
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,9 +71,10 @@ export default function LoginPage() {
                   id="email"
                   type="email"
                   required
+                  disabled={isLoading}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors"
+                  className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors disabled:opacity-50"
                   placeholder="you@example.com"
                 />
               </div>
@@ -65,9 +91,11 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   required
+                  disabled={isLoading}
+                  autoComplete="off"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors"
+                  className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors disabled:opacity-50"
                   placeholder="••••••••"
                 />
                 <button
@@ -80,23 +108,26 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
+            {/* Remember Me */}
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 accent-[#ff4b2b]" />
+                <input 
+                  type="checkbox" 
+                  className="w-4 h-4 accent-[#ff4b2b]"
+                  checked={formData.rememberMe}
+                  onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
+                />
                 <span className="text-sm text-gray-600">Remember me</span>
               </label>
-              <Link href="#" className="text-sm text-[#ff4b2b] hover:underline font-semibold">
-                Forgot Password?
-              </Link>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-[#ff4b2b] to-[#ff6b4b] text-white py-3 rounded-xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-[#ff4b2b] to-[#ff6b4b] text-white py-3 rounded-xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              Login
+              {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
 

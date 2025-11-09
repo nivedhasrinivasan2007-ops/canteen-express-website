@@ -2,15 +2,32 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Clock, Truck, Star, ChefHat, Sparkles } from "lucide-react";
+import { ArrowRight, Clock, Truck, Star, ChefHat, Sparkles, LogOut, User } from "lucide-react";
+import { useSession, authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
+  const { data: session, isPending, refetch } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     setIsVisible(true);
     console.log("Canteen Express Home Page Loaded ✅");
   }, []);
+
+  const handleSignOut = async () => {
+    const { error } = await authClient.signOut();
+    if (error?.code) {
+      toast.error(error.code);
+    } else {
+      localStorage.removeItem("bearer_token");
+      refetch();
+      toast.success("Logged out successfully!");
+      router.push("/");
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-orange-50">
@@ -38,22 +55,44 @@ export default function Home() {
                 Menu
               </Link>
             </li>
-            <li>
-              <Link
-                href="/login"
-                className="text-white no-underline font-medium transition-all hover:text-[#ffeb3b] hover:scale-105"
-              >
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/signup"
-                className="bg-[#ffeb3b] text-black px-5 py-2 rounded-full font-semibold transition-all hover:bg-white hover:shadow-lg hover:scale-105"
-              >
-                Sign Up
-              </Link>
-            </li>
+            {!isPending && !session?.user ? (
+              <>
+                <li>
+                  <Link
+                    href="/login"
+                    className="text-white no-underline font-medium transition-all hover:text-[#ffeb3b] hover:scale-105"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/signup"
+                    className="bg-[#ffeb3b] text-black px-5 py-2 rounded-full font-semibold transition-all hover:bg-white hover:shadow-lg hover:scale-105"
+                  >
+                    Sign Up
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <div className="flex items-center gap-2 text-white">
+                    <User className="w-4 h-4" />
+                    <span className="font-medium">{session?.user?.name || session?.user?.email}</span>
+                  </div>
+                </li>
+                <li>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 bg-white/20 text-white px-5 py-2 rounded-full font-semibold transition-all hover:bg-white hover:text-[#ff4b2b] hover:shadow-lg hover:scale-105"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </li>
+              </>
+            )}
             <li>
               <Link
                 href="/contact"
@@ -174,12 +213,14 @@ export default function Home() {
               🍔 Browse Menu
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link
-              href="/signup"
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full no-underline font-semibold text-lg border-2 border-white/30 transition-all hover:bg-white/20 hover:border-white/50"
-            >
-              Get Started Free
-            </Link>
+            {!session?.user && (
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full no-underline font-semibold text-lg border-2 border-white/30 transition-all hover:bg-white/20 hover:border-white/50"
+              >
+                Get Started Free
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -364,7 +405,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-12 mt-auto">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>

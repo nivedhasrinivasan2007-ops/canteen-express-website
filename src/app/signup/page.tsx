@@ -2,23 +2,64 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, User, Mail, Lock, Eye, EyeOff, Phone } from "lucide-react";
+import { ArrowLeft, User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
     password: "",
     confirmPassword: "",
   });
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log("Signup attempt:", formData);
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+
+    // Validate password length
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters long!");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await authClient.signUp.email({
+        email: formData.email,
+        name: formData.name,
+        password: formData.password,
+      });
+
+      if (error?.code) {
+        const errorMap: Record<string, string> = {
+          USER_ALREADY_EXISTS: "Email already registered. Please login instead.",
+        };
+        toast.error(errorMap[error.code] || "Registration failed. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      toast.success("Account created successfully! Redirecting to login...");
+      setTimeout(() => {
+        router.push("/login?registered=true");
+      }, 1000);
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -50,9 +91,10 @@ export default function SignupPage() {
                   id="name"
                   type="text"
                   required
+                  disabled={isLoading}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors"
+                  className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors disabled:opacity-50"
                   placeholder="John Doe"
                 />
               </div>
@@ -69,29 +111,11 @@ export default function SignupPage() {
                   id="email"
                   type="email"
                   required
+                  disabled={isLoading}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors"
+                  className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors disabled:opacity-50"
                   placeholder="you@example.com"
-                />
-              </div>
-            </div>
-
-            {/* Phone Field */}
-            <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  id="phone"
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors"
-                  placeholder="+91 98765 43210"
                 />
               </div>
             </div>
@@ -107,9 +131,11 @@ export default function SignupPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   required
+                  disabled={isLoading}
+                  autoComplete="off"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors"
+                  className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors disabled:opacity-50"
                   placeholder="••••••••"
                 />
                 <button
@@ -120,6 +146,7 @@ export default function SignupPage() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+              <p className="text-xs text-gray-500 mt-1">Minimum 8 characters</p>
             </div>
 
             {/* Confirm Password Field */}
@@ -133,9 +160,11 @@ export default function SignupPage() {
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   required
+                  disabled={isLoading}
+                  autoComplete="off"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors"
+                  className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-[#ff4b2b] focus:outline-none transition-colors disabled:opacity-50"
                   placeholder="••••••••"
                 />
                 <button
@@ -151,9 +180,10 @@ export default function SignupPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-[#ff4b2b] to-[#ff6b4b] text-white py-3 rounded-xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-[#ff4b2b] to-[#ff6b4b] text-white py-3 rounded-xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              Create Account
+              {isLoading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
