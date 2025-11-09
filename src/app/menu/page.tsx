@@ -18,6 +18,7 @@ export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [dietaryFilter, setDietaryFilter] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+  const [sortOrder, setSortOrder] = useState("none"); // "none", "asc", or "desc"
 
   const menuItems = [
     {
@@ -286,17 +287,28 @@ export default function MenuPage() {
     return sum + (item ? item.price * qty : 0);
   }, 0);
 
-  // Filter items
-  const filteredItems = menuItems.map(section => ({
-    ...section,
-    items: section.items.filter(item => {
+  // Filter and sort items
+  const filteredItems = menuItems.map(section => {
+    let filteredSectionItems = section.items.filter(item => {
       const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            item.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === "All" || section.category === selectedCategory;
       const matchesDietary = dietaryFilter === "All" || item.dietary === dietaryFilter;
       return matchesSearch && matchesCategory && matchesDietary;
-    })
-  })).filter(section => section.items.length > 0);
+    });
+
+    // Sort items if a sort order is selected
+    if (sortOrder !== "none") {
+      filteredSectionItems.sort((a, b) => {
+        return sortOrder === "asc" ? a.price - b.price : b.price - a.price;
+      });
+    }
+
+    return {
+      ...section,
+      items: filteredSectionItems
+    };
+  }).filter(section => section.items.length > 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
@@ -395,7 +407,7 @@ export default function MenuPage() {
           {/* Filters */}
           {showFilters && (
             <div className="max-w-2xl mx-auto mb-6 p-6 bg-white rounded-2xl shadow-lg">
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
                   <select
@@ -419,6 +431,18 @@ export default function MenuPage() {
                     <option>All</option>
                     <option>Veg</option>
                     <option>Non-Veg</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Sort by Price</label>
+                  <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-[#ff4b2b] focus:outline-none"
+                  >
+                    <option value="none">No sorting</option>
+                    <option value="asc">Low to High</option>
+                    <option value="desc">High to Low</option>
                   </select>
                 </div>
               </div>

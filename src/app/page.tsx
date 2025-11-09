@@ -11,6 +11,7 @@ export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const { data: session, isPending, refetch } = useSession();
   const router = useRouter();
+  const [sortOrder, setSortOrder] = useState<'none' | 'asc' | 'desc'>('none');
 
   useEffect(() => {
     setIsVisible(true);
@@ -28,6 +29,45 @@ export default function Home() {
       router.push("/");
     }
   };
+
+  // Dishes shown in the "Customer Favorites" preview and sorted according to `sortOrder`
+  const dishesList = [
+    { 
+      name: "Chicken Biryani", 
+      price: "₹120", 
+      priceNum: 120,
+      image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-golden-cris-b09f8cb7-20251109051513.jpg", 
+      rating: 4.8 
+    },
+    { 
+      name: "Paneer Butter Masala", 
+      price: "₹100", 
+      priceNum: 100,
+      image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-paneer-butt-8d730fc4-20251109051514.jpg", 
+      rating: 4.7 
+    },
+    { 
+      name: "Masala Dosa", 
+      price: "₹60", 
+      priceNum: 60,
+      image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-crispy-gold-d0698e73-20251109051513.jpg", 
+      rating: 4.9 
+    },
+    { 
+      name: "Cold Coffee", 
+      price: "₹50", 
+      priceNum: 50,
+      image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-cold-coffee-4fbff78b-20251109051513.jpg", 
+      rating: 4.6 
+    },
+  ];
+
+  const sortedDishes = (() => {
+    const copy = [...dishesList];
+    if (sortOrder === 'asc') return copy.sort((a, b) => a.priceNum - b.priceNum);
+    if (sortOrder === 'desc') return copy.sort((a, b) => b.priceNum - a.priceNum);
+    return copy;
+  })();
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-purple-50">
@@ -289,33 +329,24 @@ export default function Home() {
             <p className="text-gray-600 text-lg">Our most loved dishes that keep them coming back</p>
           </div>
 
+          <div className="flex items-center justify-between mb-6">
+            <div />
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-medium text-gray-600">Sort by price:</label>
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value as 'none' | 'asc' | 'desc')}
+                className="px-3 py-2 rounded-lg border-2 border-gray-200 focus:outline-none"
+              >
+                <option value="none">Default</option>
+                <option value="asc">Low to High</option>
+                <option value="desc">High to Low</option>
+              </select>
+            </div>
+          </div>
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { 
-                name: "Chicken Biryani", 
-                price: "₹120", 
-                image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-golden-cris-b09f8cb7-20251109051513.jpg", 
-                rating: 4.8 
-              },
-              { 
-                name: "Paneer Butter Masala", 
-                price: "₹100", 
-                image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-paneer-butt-8d730fc4-20251109051514.jpg", 
-                rating: 4.7 
-              },
-              { 
-                name: "Masala Dosa", 
-                price: "₹60", 
-                image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-crispy-gold-d0698e73-20251109051513.jpg", 
-                rating: 4.9 
-              },
-              { 
-                name: "Cold Coffee", 
-                price: "₹50", 
-                image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-cold-coffee-4fbff78b-20251109051513.jpg", 
-                rating: 4.6 
-              },
-            ].map((dish, index) => (
+            {sortedDishes.map((dish, index) => (
               <div
                 key={index}
                 className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 overflow-hidden"
