@@ -118,8 +118,19 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Place order through API
+      const token = localStorage.getItem("bearer_token");
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to place order");
+      }
 
       // Clear cart from localStorage
       localStorage.removeItem("checkout_cart");
@@ -133,6 +144,7 @@ export default function CheckoutPage() {
         router.push("/");
       }, 3000);
     } catch (error) {
+      console.error("Error placing order:", error);
       toast.error("Failed to place order. Please try again.");
       setIsProcessing(false);
     }

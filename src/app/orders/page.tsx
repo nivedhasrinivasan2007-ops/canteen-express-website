@@ -64,11 +64,11 @@ export default function OrdersPage() {
 
       if (response.ok) {
         const data = await response.json();
-        setOrders(data.orders || []);
+        setOrders(data || []);
         
         // Check for status changes and show notifications
         if (orders.length > 0) {
-          data.orders?.forEach((newOrder: Order) => {
+          data?.forEach((newOrder: Order) => {
             const oldOrder = orders.find(o => o.id === newOrder.id);
             if (oldOrder && oldOrder.status !== newOrder.status) {
               showOrderNotification(newOrder);
