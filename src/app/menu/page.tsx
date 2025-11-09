@@ -3,11 +3,16 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, ShoppingCart, Plus, Minus, Trash2, Search, Mic, Filter, X } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Plus, Minus, Trash2, Search, Mic, Filter, X, User, LogOut } from "lucide-react";
 import { toast } from "sonner";
+import { useSession, authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function MenuPage() {
+  const { data: session, isPending, refetch } = useSession();
+  const router = useRouter();
   const [cart, setCart] = useState<{ [key: string]: number }>({});
+  const [isLoadingCart, setIsLoadingCart] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -216,6 +221,12 @@ export default function MenuPage() {
   };
 
   const addToCart = (itemId: string) => {
+    if (!session?.user) {
+      toast.error("Please login to add items to cart");
+      router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+
     setCart((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
     toast.success("Item added to cart!");
   };
@@ -236,6 +247,37 @@ export default function MenuPage() {
   const clearCart = () => {
     setCart({});
     toast.info("Cart cleared");
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await authClient.signOut();
+    if (error?.code) {
+      toast.error(error.code);
+    } else {
+      localStorage.removeItem("bearer_token");
+      refetch();
+      toast.success("Logged out successfully!");
+      router.push("/");
+    }
+  };
+
+  const handleCheckout = () => {
+    if (!session?.user) {
+      toast.error("Please login to checkout");
+      router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+    
+    // Store cart in localStorage for checkout page
+    localStorage.setItem('checkout_cart', JSON.stringify({
+      items: Object.entries(cart).map(([itemId, qty]) => {
+        const item = menuItems.flatMap(section => section.items).find(i => i.id === itemId);
+        return item ? { ...item, quantity: qty } : null;
+      }).filter(Boolean),
+      total: totalPrice
+    }));
+    
+    router.push('/checkout');
   };
 
   const totalItems = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
@@ -267,15 +309,35 @@ export default function MenuPage() {
           </Link>
           <div className="flex items-center gap-2">
             <span className="text-3xl">🍴</span>
-            <span className="text-white text-xl font-bold">Menu</span>
+            <span className="text-white text-xl font-bold hidden md:inline">Menu</span>
           </div>
-          <div className="relative cursor-pointer group">
-            <ShoppingCart className="w-6 h-6 text-white" />
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#ffeb3b] text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                {totalItems}
-              </span>
-            )}
+          <div className="flex items-center gap-4">
+            {!isPending && !session?.user ? (
+              <Link href="/login" className="text-white hover:text-[#ffeb3b] transition-colors font-medium">
+                Login
+              </Link>
+            ) : session?.user ? (
+              <>
+                <div className="hidden md:flex items-center gap-2 text-white">
+                  <User className="w-4 h-4" />
+                  <span className="font-medium">{session.user.name || session.user.email}</span>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="hidden md:flex items-center gap-2 text-white hover:text-[#ffeb3b] transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </>
+            ) : null}
+            <div className="relative cursor-pointer group">
+              <ShoppingCart className="w-6 h-6 text-white" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#ffeb3b] text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                  {totalItems}
+                </span>
+              )}
+            </div>
           </div>
         </nav>
       </header>
@@ -461,7 +523,10 @@ export default function MenuPage() {
               <span className="text-[#ff4b2b]">₹{totalPrice}</span>
             </div>
           </div>
-          <button className="w-full bg-[#ff4b2b] text-white py-3 rounded-full font-bold hover:bg-[#ff3b1b] transition-colors">
+          <button 
+            onClick={handleCheckout}
+            className="w-full bg-[#ff4b2b] text-white py-3 rounded-full font-bold hover:bg-[#ff3b1b] transition-colors"
+          >
             Proceed to Checkout
           </button>
         </div>
