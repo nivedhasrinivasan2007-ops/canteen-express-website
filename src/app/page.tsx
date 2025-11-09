@@ -6,6 +6,8 @@ import { ArrowRight, Clock, Truck, Star, ChefHat, Sparkles, LogOut, User, Packag
 import { useSession, authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+// Firebase imports
+import { auth, signOut } from "@/lib/firebase";
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,14 +21,23 @@ export default function Home() {
   }, []);
 
   const handleSignOut = async () => {
-    const { error } = await authClient.signOut();
-    if (error?.code) {
-      toast.error(error.code);
-    } else {
-      localStorage.removeItem("bearer_token");
-      refetch();
-      toast.success("Logged out successfully!");
-      router.push("/");
+    try {
+      // Sign out from Firebase
+      await signOut(auth);
+      
+      // Also sign out from better-auth
+      const { error } = await authClient.signOut();
+      if (error?.code) {
+        toast.error(error.code);
+      } else {
+        localStorage.removeItem("bearer_token");
+        refetch();
+        toast.success("Logged out successfully!");
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Firebase logout error:", error);
+      toast.error("Logout failed. Please try again.");
     }
   };
 

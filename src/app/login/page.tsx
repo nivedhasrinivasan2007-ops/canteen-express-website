@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+// Firebase imports
+import { auth, signInWithEmailAndPassword, storeUserData } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,28 +20,83 @@ export default function LoginPage() {
   });
   const router = useRouter();
 
+  // Check if user is already logged in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, redirect to menu
+        router.push("/menu");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const { data, error } = await authClient.signIn.email({
-        email: formData.email,
-        password: formData.password,
-        rememberMe: formData.rememberMe,
-      });
-
-      if (error?.code) {
-        toast.error("Invalid email or password. Please make sure you have already registered an account and try again.");
-        setIsLoading(false);
-        return;
-      }
+      // Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      
+      // Store user data in Firestore
+      await storeUserData(userCredential.user);
 
       toast.success("Login successful! Redirecting...");
       router.push("/menu");
-    } catch (error) {
-      toast.error("An error occurred. Please try again.");
-      setIsLoading(false);
+    } catch (error: any) {
+      console.error("Firebase login error:", error);
+      
+      // Check if it's a Firebase auth error
+      if (error.code && error.code.startsWith('auth/')) {
+        // Firebase auth error, show appropriate message
+        let errorMessage = "Invalid email or password. Please make sure you have already registered an account and try again.";
+        
+        switch (error.code) {
+          case 'auth/user-not-found':
+            errorMessage = "No account found with this email. Please sign up first.";
+            break;
+          case 'auth/wrong-password':
+            errorMessage = "Incorrect password. Please try again.";
+            break;
+          case 'auth/invalid-email':
+            errorMessage = "Invalid email format. Please check your email.";
+            break;
+          case 'auth/user-disabled':
+            errorMessage = "This account has been disabled. Please contact support.";
+            break;
+        }
+        
+        toast.error(errorMessage);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Fallback to existing auth method for non-Firebase errors
+      try {
+        const { data, error: betterAuthError } = await authClient.signIn.email({
+          email: formData.email,
+          password: formData.password,
+          rememberMe: formData.rememberMe,
+        });
+
+        if (betterAuthError?.code) {
+          toast.error("Invalid email or password. Please make sure you have already registered an account and try again.");
+          setIsLoading(false);
+          return;
+        }
+
+        toast.success("Login successful! Redirecting...");
+        router.push("/menu");
+      } catch (fallbackError) {
+        toast.error("Invalid email or password. Please make sure you have already registered an account and try again.");
+        setIsLoading(false);
+      }
     }
   };
 

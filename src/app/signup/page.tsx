@@ -6,6 +6,9 @@ import { ArrowLeft, User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+// Firebase imports
+import { auth, createUserWithEmailAndPassword, storeUserData } from "@/lib/firebase";
+import { updateProfile } from "firebase/auth";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -37,28 +40,77 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      const { error } = await authClient.signUp.email({
-        email: formData.email,
-        name: formData.name,
-        password: formData.password,
-      });
-
-      if (error?.code) {
-        const errorMap: Record<string, string> = {
-          USER_ALREADY_EXISTS: "Email already registered. Please login instead.",
-        };
-        toast.error(errorMap[error.code] || "Registration failed. Please try again.");
-        setIsLoading(false);
-        return;
+      // Sign up with Firebase
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      
+      // Update user profile with name
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, {
+          displayName: formData.name
+        });
+        
+        // Store user data in Firestore
+        await storeUserData(userCredential.user);
       }
 
       toast.success("Account created successfully! Redirecting to login...");
       setTimeout(() => {
         router.push("/login?registered=true");
       }, 1000);
-    } catch (error) {
-      toast.error("An error occurred. Please try again.");
-      setIsLoading(false);
+    } catch (error: any) {
+      console.error("Firebase signup error:", error);
+      
+      // Check if it's a Firebase auth error
+      if (error.code && error.code.startsWith('auth/')) {
+        // Firebase auth error, show appropriate message
+        let errorMessage = "Registration failed. Please try again.";
+        
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = "Email already registered. Please login instead.";
+            break;
+          case 'auth/invalid-email':
+            errorMessage = "Invalid email format. Please check your email.";
+            break;
+          case 'auth/weak-password':
+            errorMessage = "Password is too weak. Please use a stronger password.";
+            break;
+        }
+        
+        toast.error(errorMessage);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Fallback to existing auth method for non-Firebase errors
+      try {
+        const { error: betterAuthError } = await authClient.signUp.email({
+          email: formData.email,
+          name: formData.name,
+          password: formData.password,
+        });
+
+        if (betterAuthError?.code) {
+          const errorMap: Record<string, string> = {
+            USER_ALREADY_EXISTS: "Email already registered. Please login instead.",
+          };
+          toast.error(errorMap[betterAuthError.code] || "Registration failed. Please try again.");
+          setIsLoading(false);
+          return;
+        }
+
+        toast.success("Account created successfully! Redirecting to login...");
+        setTimeout(() => {
+          router.push("/login?registered=true");
+        }, 1000);
+      } catch (fallbackError) {
+        toast.error("Registration failed. Please try again.");
+        setIsLoading(false);
+      }
     }
   };
 
