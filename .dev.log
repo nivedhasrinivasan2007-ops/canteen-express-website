@@ -1,0 +1,41 @@
+nohup: ignoring input
+
+> app@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.3.5 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.65:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 703ms
+ ✓ Ready in 1504ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.2s
+ ⨯ ./canteen/canteen-express-website/src/app/favicon.ico
+Processing image failed
+unable to decode image data
+
+Caused by:
+- Format error decoding Ico: ICO image entry has too many color planes or too large hotspot value
+- ICO image entry has too many color planes or too large hotspot value
+
+
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 692ms
+ GET / 500 in 2994ms
+ ⨯ ./canteen/canteen-express-website/src/app/favicon.ico
+Processing image failed
+unable to decode image data
+
+Caused by:
+- Format error decoding Ico: ICO image entry has too many color planes or too large hotspot value
+- ICO image entry has too many color planes or too large hotspot value
+
+
+ GET / 500 in 23ms
+ ✓ Compiled /favicon.ico in 247ms
+ GET /favicon.ico 500 in 257ms
+[?25h
