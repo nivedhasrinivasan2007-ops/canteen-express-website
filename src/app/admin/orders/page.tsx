@@ -358,7 +358,36 @@ export default function AdminOrdersPage() {
                     </div>
                     
                     <div className="flex flex-wrap gap-2">
-                      {statusOptions.map((option) => (
+                      {/* Accept/Decline buttons for pending orders */}
+                      {order.status === "pending" && (
+                        <>
+                          <button
+                            onClick={() => updateOrderStatus(order.id, "confirmed")}
+                            disabled={updatingOrderId === order.id}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                              updatingOrderId === order.id
+                                ? "bg-gray-300 text-gray-500"
+                                : "bg-green-500 text-white hover:bg-green-600"
+                            }`}
+                          >
+                            {updatingOrderId === order.id ? "Accepting..." : "Accept Order"}
+                          </button>
+                          <button
+                            onClick={() => updateOrderStatus(order.id, "cancelled")}
+                            disabled={updatingOrderId === order.id}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                              updatingOrderId === order.id
+                                ? "bg-gray-300 text-gray-500"
+                                : "bg-red-500 text-white hover:bg-red-600"
+                            }`}
+                          >
+                            {updatingOrderId === order.id ? "Declining..." : "Decline Order"}
+                          </button>
+                        </>
+                      )}
+                      
+                      {/* Show all status options for other orders */}
+                      {order.status !== "pending" && statusOptions.map((option) => (
                         <button
                           key={option.value}
                           onClick={() => updateOrderStatus(order.id, option.value)}

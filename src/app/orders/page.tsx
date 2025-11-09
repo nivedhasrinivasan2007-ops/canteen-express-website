@@ -20,13 +20,13 @@ interface Order {
   id: number;
   user_id: string;
   status: string;
-  total_amount: number;
-  delivery_address: string;
-  phone: string;
-  payment_method: string;
-  special_instructions: string | null;
+  total: number;
+  delivery_address?: string;
+  phone?: string;
+  payment_method?: string;
+  special_instructions?: string | null;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
   items: OrderItem[];
   estimated_delivery?: string;
   current_location?: string;
@@ -250,8 +250,8 @@ export default function OrdersPage() {
                       </p>
                     </div>
                     <div className="text-left md:text-right">
-                      <p className="text-3xl font-bold text-purple-600">₹{order.total_amount}</p>
-                      <p className="text-sm text-gray-600">{order.payment_method}</p>
+                      <p className="text-3xl font-bold text-purple-600">₹{order.total}</p>
+                      <p className="text-sm text-gray-600">{order.payment_method || "Cash on Delivery"}</p>
                     </div>
                   </div>
                 </div>
@@ -273,7 +273,7 @@ export default function OrdersPage() {
                           {order.status === "delivered" ? "Delivered At" : "Estimated Delivery"}
                         </h4>
                         <p className="text-gray-700">
-                          {order.status === "delivered"
+                          {order.status === "delivered" && order.updated_at
                             ? new Date(order.updated_at).toLocaleTimeString("en-US", {
                                 hour: "2-digit",
                                 minute: "2-digit",
