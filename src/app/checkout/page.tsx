@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSession, authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, CreditCard, Wallet, Banknote, CheckCircle, Loader2, User, LogOut } from "lucide-react";
+import { ArrowLeft, CreditCard, Smartphone, Banknote, MapPin, Phone, User, ShoppingBag, CheckCircle, Package, LogOut, Wallet, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useSession, authClient } from "@/lib/auth-client";
 
 interface CartItem {
   id: string;
@@ -195,35 +195,39 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-orange-50">
-      {/* Navigation Bar */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#ff4b2b]/95 shadow-lg">
-        <nav className="container mx-auto px-6 md:px-12 py-4 flex justify-between items-center">
-          <Link href="/menu" className="flex items-center gap-2 group">
-            <ArrowLeft className="w-5 h-5 text-white group-hover:-translate-x-1 transition-transform" />
-            <span className="text-white font-semibold">Back to Menu</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <span className="text-3xl">🛒</span>
-            <span className="text-white text-xl font-bold">Checkout</span>
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+      {/* Header */}
+      <header className="bg-gradient-to-r from-purple-600 to-purple-800 text-white shadow-lg">
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex items-center justify-between mb-2">
+            <Link
+              href="/menu"
+              className="flex items-center gap-2 text-white hover:text-[#ffeb3b] transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Menu</span>
+            </Link>
+            <div className="flex items-center gap-4">
+              {session?.user && (
+                <>
+                  <Link
+                    href="/orders"
+                    className="flex items-center gap-2 text-white hover:text-[#ffeb3b] transition-colors"
+                  >
+                    <Package className="w-5 h-5" />
+                    <span className="font-medium hidden sm:inline">My Orders</span>
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    <span className="font-medium hidden sm:inline">{session.user.name || session.user.email}</span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            {session?.user && (
-              <>
-                <div className="hidden md:flex items-center gap-2 text-white">
-                  <User className="w-4 h-4" />
-                  <span className="font-medium">{session.user.name || session.user.email}</span>
-                </div>
-                <button
-                  onClick={handleSignOut}
-                  className="hidden md:flex items-center gap-2 text-white hover:text-[#ffeb3b] transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </>
-            )}
-          </div>
-        </nav>
+          <h1 className="text-3xl md:text-4xl font-bold">Checkout</h1>
+          <p className="text-purple-200">Complete your order</p>
+        </div>
       </header>
 
       {/* Checkout Content */}

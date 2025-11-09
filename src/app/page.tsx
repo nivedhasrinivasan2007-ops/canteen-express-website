@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Clock, Truck, Star, ChefHat, Sparkles, LogOut, User } from "lucide-react";
+import { ArrowRight, Clock, Truck, Star, ChefHat, Sparkles, LogOut, User, Package } from "lucide-react";
 import { useSession, authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -30,9 +30,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-orange-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-purple-50">
       {/* Navigation Bar */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#ff4b2b]/95 shadow-lg">
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-gradient-to-r from-purple-600 to-purple-800 shadow-lg">
         <nav className="container mx-auto px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="text-3xl">🍴</span>
@@ -77,6 +77,15 @@ export default function Home() {
             ) : (
               <>
                 <li>
+                  <Link
+                    href="/orders"
+                    className="flex items-center gap-2 text-white no-underline font-medium transition-all hover:text-[#ffeb3b] hover:scale-105"
+                  >
+                    <Package className="w-4 h-4" />
+                    My Orders
+                  </Link>
+                </li>
+                <li>
                   <div className="flex items-center gap-2 text-white">
                     <User className="w-4 h-4" />
                     <span className="font-medium">{session?.user?.name || session?.user?.email}</span>
@@ -85,7 +94,7 @@ export default function Home() {
                 <li>
                   <button
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 bg-white/20 text-white px-5 py-2 rounded-full font-semibold transition-all hover:bg-white hover:text-[#ff4b2b] hover:shadow-lg hover:scale-105"
+                    className="flex items-center gap-2 bg-white/20 text-white px-5 py-2 rounded-full font-semibold transition-all hover:bg-white hover:text-purple-600 hover:shadow-lg hover:scale-105"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -165,7 +174,6 @@ export default function Home() {
               backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/layered-crispy-kerala-parota-paratha-on--2d4fd2e9-20251108104347.jpg')",
             }}
           />
-          {/* Repeat for additional columns on larger screens */}
           <div 
             className="hidden md:block relative h-full bg-cover bg-center animate-fade-in delay-450"
             style={{
@@ -187,7 +195,7 @@ export default function Home() {
         </div>
         
         {/* Enhanced Dark Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-[#ff4b2b]/40 to-black/75"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-purple-900/40 to-black/75"></div>
         
         <div
           className={`relative z-10 max-w-4xl px-6 transition-all duration-1000 ${
@@ -230,7 +238,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              Why Choose <span className="text-[#ff4b2b]">Madras Engineering College Canteen</span>?
+              Why Choose <span className="text-purple-600">Madras Engineering College Canteen</span>?
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               Experience the perfect blend of speed, quality, and convenience
@@ -238,8 +246,8 @@ export default function Home() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="group bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-orange-100">
-              <div className="w-16 h-16 bg-[#ff4b2b] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="group bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-purple-100">
+              <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Clock className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-3">Lightning Fast</h3>
@@ -258,8 +266,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="group bg-gradient-to-br from-red-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-red-100">
-              <div className="w-16 h-16 bg-[#ff4b2b] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="group bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-purple-100">
+              <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Truck className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-3">Free Delivery</h3>
@@ -272,29 +280,50 @@ export default function Home() {
       </section>
 
       {/* Popular Dishes Preview */}
-      <section className="py-20 bg-gradient-to-b from-orange-50 to-white">
+      <section className="py-20 bg-gradient-to-b from-purple-50 to-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              Customer <span className="text-[#ff4b2b]">Favorites</span>
+              Customer <span className="text-purple-600">Favorites</span>
             </h2>
             <p className="text-gray-600 text-lg">Our most loved dishes that keep them coming back</p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { name: "Chicken Biryani", price: "₹120", emoji: "🍛", rating: 4.8 },
-              { name: "Paneer Butter Masala", price: "₹100", emoji: "🍲", rating: 4.7 },
-              { name: "Masala Dosa", price: "₹60", emoji: "🥞", rating: 4.9 },
-              { name: "Cold Coffee", price: "₹50", emoji: "☕", rating: 4.6 },
+              { 
+                name: "Chicken Biryani", 
+                price: "₹120", 
+                image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-golden-cris-b09f8cb7-20251109051513.jpg", 
+                rating: 4.8 
+              },
+              { 
+                name: "Paneer Butter Masala", 
+                price: "₹100", 
+                image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-paneer-butt-8d730fc4-20251109051514.jpg", 
+                rating: 4.7 
+              },
+              { 
+                name: "Masala Dosa", 
+                price: "₹60", 
+                image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-crispy-gold-d0698e73-20251109051513.jpg", 
+                rating: 4.9 
+              },
+              { 
+                name: "Cold Coffee", 
+                price: "₹50", 
+                image: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/55d3abfa-9350-433f-b3c8-27edb23c04e8/generated_images/hyper-realistic-3d-render-of-cold-coffee-4fbff78b-20251109051513.jpg", 
+                rating: 4.6 
+              },
             ].map((dish, index) => (
               <div
                 key={index}
                 className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 overflow-hidden"
               >
-                <div className="bg-gradient-to-br from-[#ff4b2b] to-[#ff6b4b] h-48 flex items-center justify-center text-8xl group-hover:scale-110 transition-transform">
-                  {dish.emoji}
-                </div>
+                <div 
+                  className="h-48 bg-cover bg-center group-hover:scale-110 transition-transform duration-300"
+                  style={{ backgroundImage: `url('${dish.image}')` }}
+                />
                 <div className="p-6">
                   <div className="flex items-center gap-1 mb-2">
                     <Star className="w-4 h-4 fill-[#ffeb3b] text-[#ffeb3b]" />
@@ -302,8 +331,8 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{dish.name}</h3>
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-[#ff4b2b]">{dish.price}</span>
-                    <button className="bg-[#ffeb3b] text-black px-4 py-2 rounded-full font-semibold text-sm hover:bg-[#ff4b2b] hover:text-white transition-colors">
+                    <span className="text-2xl font-bold text-purple-600">{dish.price}</span>
+                    <button className="bg-[#ffeb3b] text-black px-4 py-2 rounded-full font-semibold text-sm hover:bg-purple-600 hover:text-white transition-colors">
                       Order Now
                     </button>
                   </div>
@@ -315,7 +344,7 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link
               href="/menu"
-              className="inline-flex items-center gap-2 bg-[#ff4b2b] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#ff6b4b] transition-all hover:shadow-xl hover:scale-105"
+              className="inline-flex items-center gap-2 bg-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-700 transition-all hover:shadow-xl hover:scale-105"
             >
               View Full Menu
               <ArrowRight className="w-5 h-5" />
@@ -329,7 +358,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              What Our <span className="text-[#ff4b2b]">Customers Say</span>
+              What Our <span className="text-purple-600">Customers Say</span>
             </h2>
             <p className="text-gray-600 text-lg">Real reviews from real food lovers</p>
           </div>
@@ -354,7 +383,7 @@ export default function Home() {
             ].map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-orange-100"
+                className="bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-purple-100"
               >
                 <div className="flex gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
@@ -363,7 +392,7 @@ export default function Home() {
                 </div>
                 <p className="text-gray-700 italic mb-6 leading-relaxed">"{testimonial.review}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#ff4b2b] to-[#ff6b4b] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full flex items-center justify-center text-white font-bold text-lg">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
@@ -378,7 +407,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#ff4b2b] to-[#ff6b4b] text-white">
+      <section className="py-20 bg-gradient-to-r from-purple-600 to-purple-800 text-white">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready to Order Your Favorite Meal?
@@ -389,14 +418,14 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/menu"
-              className="inline-flex items-center gap-2 bg-white text-[#ff4b2b] px-8 py-4 rounded-full font-bold text-lg hover:bg-[#ffeb3b] hover:text-black transition-all hover:shadow-2xl hover:scale-105"
+              className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-[#ffeb3b] hover:text-black transition-all hover:shadow-2xl hover:scale-105"
             >
               Order Now
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 bg-transparent text-white px-8 py-4 rounded-full font-bold text-lg border-2 border-white hover:bg-white hover:text-[#ff4b2b] transition-all"
+              className="inline-flex items-center gap-2 bg-transparent text-white px-8 py-4 rounded-full font-bold text-lg border-2 border-white hover:bg-white hover:text-purple-600 transition-all"
             >
               Create Account
             </Link>
@@ -423,6 +452,7 @@ export default function Home() {
               <ul className="space-y-2">
                 <li><Link href="/" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">Home</Link></li>
                 <li><Link href="/menu" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">Menu</Link></li>
+                <li><Link href="/orders" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">My Orders</Link></li>
                 <li><Link href="/contact" className="text-gray-400 hover:text-[#ffeb3b] transition-colors">Contact</Link></li>
               </ul>
             </div>

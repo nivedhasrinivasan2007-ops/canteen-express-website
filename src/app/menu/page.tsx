@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ArrowLeft, ShoppingCart, Plus, Minus, Trash2, Search, Mic, Filter, X, User, LogOut } from "lucide-react";
+import Link from "next/link";
+import { Search, Filter, Mic, MicOff, Plus, Minus, Trash2, ShoppingCart, ArrowLeft, User, LogOut, Package } from "lucide-react";
 import { toast } from "sonner";
 import { useSession, authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -299,47 +299,56 @@ export default function MenuPage() {
   })).filter(section => section.items.length > 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-orange-50">
-      {/* Navigation Bar */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#ff4b2b]/95 shadow-lg">
-        <nav className="container mx-auto px-6 md:px-12 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2 group">
-            <ArrowLeft className="w-5 h-5 text-white group-hover:-translate-x-1 transition-transform" />
-            <span className="text-white font-semibold">Back to Home</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <span className="text-3xl">🍴</span>
-            <span className="text-white text-xl font-bold hidden md:inline">Menu</span>
-          </div>
-          <div className="flex items-center gap-4">
-            {!isPending && !session?.user ? (
-              <Link href="/login" className="text-white hover:text-[#ffeb3b] transition-colors font-medium">
-                Login
-              </Link>
-            ) : session?.user ? (
-              <>
-                <div className="hidden md:flex items-center gap-2 text-white">
-                  <User className="w-4 h-4" />
-                  <span className="font-medium">{session.user.name || session.user.email}</span>
-                </div>
-                <button
-                  onClick={handleSignOut}
-                  className="hidden md:flex items-center gap-2 text-white hover:text-[#ffeb3b] transition-colors"
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+      {/* Header */}
+      <header className="bg-gradient-to-r from-purple-600 to-purple-800 text-white shadow-lg sticky top-0 z-40">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-white hover:text-[#ffeb3b] transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="font-semibold">Back to Home</span>
+            </Link>
+            <div className="flex items-center gap-4">
+              {!isPending && session?.user && (
+                <>
+                  <Link
+                    href="/orders"
+                    className="flex items-center gap-2 text-white hover:text-[#ffeb3b] transition-colors"
+                  >
+                    <Package className="w-5 h-5" />
+                    <span className="font-medium hidden sm:inline">My Orders</span>
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    <span className="font-medium hidden sm:inline">{session.user.name || session.user.email}</span>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition-all"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span className="hidden sm:inline">Logout</span>
+                  </button>
+                </>
+              )}
+              {!isPending && !session?.user && (
+                <Link
+                  href="/login"
+                  className="flex items-center gap-2 bg-[#ffeb3b] text-black px-5 py-2 rounded-full font-semibold hover:bg-white transition-all"
                 >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </>
-            ) : null}
-            <div className="relative cursor-pointer group">
-              <ShoppingCart className="w-6 h-6 text-white" />
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#ffeb3b] text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                  {totalItems}
-                </span>
+                  Login
+                </Link>
               )}
             </div>
           </div>
-        </nav>
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">Our Menu</h1>
+            <p className="text-purple-200 text-lg">Delicious food from Madras Engineering College Canteen</p>
+          </div>
+        </div>
       </header>
 
       {/* Menu Content */}
